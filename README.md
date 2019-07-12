@@ -1,3 +1,3 @@
 Welcome to SmartBrain!!!
 
-This brain identifies face from image you upload.
+This brain will identify faces from uploaded image.
