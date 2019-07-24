@@ -38,7 +38,18 @@ class App extends React.Component {
       box : {},
       route : 'signin',
       isSignedIn : false,
+      user : {
+        id : '',
+        name : '',
+        email : '',
+        entries : 0,
+        joined : '',
+      }
     }
+  }
+
+  loadUser = (user) => {
+    this.setState({user : user});
   }
 
   onInputChange = (event) => {
@@ -110,9 +121,9 @@ class App extends React.Component {
               <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
             </div>
           : (
-              this.state.route === 'signin' 
+              this.state.route === 'signin' || this.state.route === 'signout'
               ? <SignIn onRouteChange={this.onRouteChange}/>
-              : <Register onRouteChange={this.onRouteChange}/>
+              : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
             )
         }
         </div>
