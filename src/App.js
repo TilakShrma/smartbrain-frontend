@@ -61,7 +61,6 @@ class App extends React.Component {
     const image = document.getElementById("inputImage");
     const width = Number(image.width);
     const height = Number(image.height);
-    console.log(width, height);
 
     return {
       leftCol : boundingBox.left_col * width,
@@ -75,7 +74,6 @@ class App extends React.Component {
 
   drawFaceBox = (faceCoordinates) => {
     this.setState({box : faceCoordinates});
-    console.log(this.state.box);
   }
 
   /**
@@ -87,6 +85,20 @@ class App extends React.Component {
 
     app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
     .then(response => {
+
+      if(response){
+        fetch('http://localhost:3000/image', {
+          method : 'put',
+          headers : { 'Content-Type' : 'application/json'},
+          body : JSON.stringify({
+            id : this.state.user.id
+          })
+        })
+        .then(response => response.json())
+        .then(count => {
+          this.setState(Object.assign(this.state.user, { entries : count}))
+        })
+      }
       this.drawFaceBox(this.calculateFaceLocation(response));
     })
     .catch(error => console.log(error));
@@ -116,13 +128,13 @@ class App extends React.Component {
           this.state.route === 'home'
           ? <div>
               <Logo/>
-              <Rank/>
+              <Rank name={this.state.user.name} entries={this.state.user.entries}/>
               <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
               <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
             </div>
           : (
               this.state.route === 'signin' || this.state.route === 'signout'
-              ? <SignIn onRouteChange={this.onRouteChange}/>
+              ? <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
               : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
             )
         }
