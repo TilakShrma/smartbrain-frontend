@@ -48,21 +48,6 @@ class App extends React.Component {
   constructor(){
     super();
     this.state = initState;
-    // this.state = {
-    //   input : '',
-    //   imageUrl : '',
-    //   box : {},
-    //   route : 'signin',
-    //   isSignedIn : false,
-    //   user : {
-    //     id : '',
-    //     name : '',
-    //     email : '',
-    //     entries : 0,
-    //     joined : '',
-    //   }
-    // }
-
   }
 
   loadUser = (user) => {
@@ -102,7 +87,6 @@ class App extends React.Component {
 
     app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
     .then(response => {
-
       if(response){
         fetch('http://localhost:3000/image', {
           method : 'put',
@@ -115,6 +99,7 @@ class App extends React.Component {
         .then(count => {
           this.setState(Object.assign(this.state.user, { entries : count}))
         })
+        .catch(console.log)
       }
       this.drawFaceBox(this.calculateFaceLocation(response));
     })
