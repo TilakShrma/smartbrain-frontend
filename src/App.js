@@ -28,24 +28,41 @@ const particleOptions = {
 
 const app = new Clarifai.App({apiKey: '79950ea53abc48a1a39f5c6038324b8e'});
 
+const initState = {
+  input : '',
+  imageUrl : '',
+  box : {},
+  route : 'signin',
+  isSignedIn : false,
+  user : {
+    id : '',
+    name : '',
+    email : '',
+    entries : 0,
+    joined : '',
+  }
+}
+
 class App extends React.Component {
   
   constructor(){
     super();
-    this.state = {
-      input : '',
-      imageUrl : '',
-      box : {},
-      route : 'signin',
-      isSignedIn : false,
-      user : {
-        id : '',
-        name : '',
-        email : '',
-        entries : 0,
-        joined : '',
-      }
-    }
+    this.state = initState;
+    // this.state = {
+    //   input : '',
+    //   imageUrl : '',
+    //   box : {},
+    //   route : 'signin',
+    //   isSignedIn : false,
+    //   user : {
+    //     id : '',
+    //     name : '',
+    //     email : '',
+    //     entries : 0,
+    //     joined : '',
+    //   }
+    // }
+
   }
 
   loadUser = (user) => {
@@ -108,7 +125,7 @@ class App extends React.Component {
   onRouteChange = (route) => {
 
     if(route === 'signout'){
-      this.setState({isSignedIn : false})
+      this.setState(initState)
     }else if(route === 'home'){
       this.setState({isSignedIn : true})
     }
