@@ -7,8 +7,6 @@ import Rank from './components/rank/Rank';
 import ImageLinkForm from './components/imageLinkForm/ImageLinkForm';
 import FaceRecognition from './components/faceRecognition/FaceRecognition';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
-
 
 import './App.css';
 
@@ -25,8 +23,6 @@ const particleOptions = {
     "value": "#E86363"
 }
 }
-
-const app = new Clarifai.App({apiKey: '79950ea53abc48a1a39f5c6038324b8e'});
 
 const initState = {
   input : '',
@@ -78,14 +74,18 @@ class App extends React.Component {
     this.setState({box : faceCoordinates});
   }
 
-  /**
-   * TBD : functionality after clicking submit 
-   */
   onSubmit = () => {
     
     this.setState({imageUrl : this.state.input});
 
-    app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+    fetch('http://localhost:3000/imageApiCall', {
+      method : 'post',
+      headers : { 'Content-Type' : 'application/json'},
+      body : JSON.stringify({
+        input : this.state.input
+      })
+    })
+    .then(response => response.json())
     .then(response => {
       if(response){
         fetch('http://localhost:3000/image', {
@@ -108,7 +108,6 @@ class App extends React.Component {
   }
 
   onRouteChange = (route) => {
-
     if(route === 'signout'){
       this.setState(initState)
     }else if(route === 'home'){
